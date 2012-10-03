@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+<head>
+<link type="text/css" href="css/ui-lightness/jquery-ui-1.8.23.custom.css" rel="stylesheet" />
+
+<style>
+	body, html {
+		margin: 0;
+		padding: 0;
+		color: #000;
+		background: #ddd;
+		font-family: Arial, Helvetica, sans-serif;
+	}
+
+	#header {
+		background: #ddd;
+	}
+
+	#worlds {
+		float: left;
+		width: 200px;
+		background: #d1d1d1;
+	}
+	#worlds li {
+		list-style-type: none;
+	}
+
+	#main {
+		margin-left:200px;
+	}
+
+	#footer {
+		clear: both;
+		background: #cc9;
+	}
+
+	#map-table {
+	}
+	table {
+		border-collapse: collapse;
+		border-spacing: 0px;
+	}
+	th, td {
+		padding: 0px;
+		font-size: 0px;  /* Not 100% sure why this is necessary, due to HTML5 doctype.*/
+	}
+
+	#towers {
+	}
+
+	.level {
+		background: #d1d1d1;
+	}
+	.level-hover {
+		background: #eee;
+		cursor: pointer;
+	}
+	.level-selected {
+		background: #fff;
+		font-weight: bold;
+	}
+
+	#round-slider {
+		margin-top: 20px;
+		margin-left: 20px;
+		margin-right: 20px;
+	}
+</style>
+</head>
+<body>
+<!--<a href="javascript:window.location.replace('#bar')">Hello</a>-->
+<div id="header"><h1>Fieldrunners 2 Planner</h1></div>
+
+<div id="worlds">
+
+</div>
+<div id="main">
+<div id="map">
+	<h2>Instructions</h2>
+	<ol>
+		<li>Select a level on the left.
+		<li>Click on one of the towers below to select it.
+		<li>Click on the map to place the tower.  Click multiple times to change the tower upgrade level.  Clicking past the 3rd level will remove the tower.
+		<li>Use the slider below to change the current level.
+	</ol>
+</div>
+
+<div id="towers"></div>
+
+<div id="round-slider"></div>
+<div id="round-number"></div>
+
+<div id="test-comp"></div>
+</div>
+
+<!--<div id="footer">Footer</div>-->
+
+</body>
+<script id="worldsTmpl" type="text/x-handlebars-template">
+	{{#myeach worlds}}
+	<h3>{{name}}</h3>
+	<ul>
+	{{#myeach levels}}
+		<li class="level" id="level-{{../index}}-{{index}}">{{name}}</li>
+	{{/myeach}}
+	</ul>
+	{{/myeach}}
+</script>
+
+<script id="mapTmpl" type="text/x-handlebars-template">
+	<h2>{{name}}</h2>
+
+	<table id="map-table">
+	  {{#myeach layout}}
+		<tr>
+			{{#myeach this}}
+			<td><img alt="map tile" src="{{maptile value}}" onclick="javascript:tile_click({{../index}}, {{index}});"></td>
+			{{/myeach}}
+		</tr>
+		{{/myeach}}
+	</table>
+</script>
+
+<script id="towersTmpl" type="text/x-handlebars-template">
+	<table>
+		{{#myeach towers}}
+		<tr>
+			{{#myeach tower_row}}
+			<td><img alt="{{imgname}}" title="{{imgname}}" src="images/tower-select/{{imgname}}.png" onclick="javascript:tower_select({{number}});"></td>
+			{{/myeach}}
+		</tr>
+		{{/myeach}}
+	</table>
+</script>
+
+<script src="js/jquery-1.8.0.min.js"></script>
+<script src="js/jquery-ui-1.8.23.custom.min.js"></script>
+<script src="js/jquery.hotkeys.js"></script>
+<script src="js/jquery.base64.js"></script>
+<script src="js/jquery.ba-bbq.js"></script>
+<script src="js/handlebars-1.0.rc.1.js"></script>
+<script src="fr2plan.js"></script>
+
+</html>

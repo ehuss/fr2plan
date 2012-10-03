@@ -1,0 +1,35 @@
+TODO:
+- test move loading/compression
+- Rename and rearrange files.
+	- change name to include "2".
+
+- history traversal back to where "level" is not set should clear the level.
+- Fix background colors.
+- Some way to indicate which tower is currently selected?
+- Prettify.
+- Footer?
+- button to add rounds (endless/challenges/etc)
+- maybe use translation for animation instead of fade
+- changing towers, and then clicking on an existing tower of a different type upgrades the old tower type instead of replacing.
+
+Advanced:
+- differentiate trenches/background
+- select towers first (with animation!)
+- save layout
+- show runner path
+- handle levels that already have towers
+- undo
+
+Missing towers:
+- machine gun
+- sonic blast
+- slow link
+- cannon
+- gas
+- link
+- plague
+- zap
+- power
+- radiation
+- mine
+- nuke
