@@ -83,8 +83,26 @@ BitReader.prototype.get_bits = function(num_bits) {
 }
 
 /***************************************************************************/
+
+
 function compress(data) {
-	var k = 1;
+	// Pick the k value that gives best compression.
+	var compressed = [];
+	var min_length = 0xFFFF;
+	var min_k = -1;
+	for (var k=1; k<3; k++) {
+		var cdata = compress_rice(data, k);
+		if (cdata.length < min_length) {
+			min_length = cdata.length;
+			min_k = k;
+		}
+		compressed.push(cdata);
+	}
+	var compress_code = String.fromCharCode("A".charCodeAt(0)+min_k-1);
+	return compress_code + $.base64.encode(compressed[min_k-1]);
+}
+
+function compress_rice(data, k) {
 	var mask = 0xFF >> (8 - k);
 	var bs = new BitStore();
 	for (var i=0; i<data.length; i++) {
@@ -104,9 +122,15 @@ function compress(data) {
 }
 
 function uncompress(data) {
+	var k = (data.charCodeAt(0) - "A".charCodeAt(0)) + 1;
+	var cdata = data.slice(1);
+	var compressed = $.base64.decode(cdata);
+	return uncompress_rice(compressed, k);
+}
+
+function uncompress_rice(data, k) {
 	var br = new BitReader(data);
 	var result = new Array();
-	var k = 1;
 	var b = 0;
 	while (true) {
 		var bit = br.get_bit();
@@ -128,6 +152,7 @@ function uncompress(data) {
 	}
 	return result;
 }
+
 
 /***************************************************************************/
 
@@ -891,7 +916,10 @@ function update_code()
 			if (m[2] == move[2] && m[3] == move[3]) {
 				if (m[0] == move[0]) {
 					if (m[1] != (move[1]-1)) {
-						console.log("Whoops, tower upgrade wrong?");
+						// Tower upgrade from lvl1 to lvl3.  Could include two
+						// upgrade moves, but to keep things simple just
+						// include the lvl 3 data.
+						return -1;
 					} else {
 						return movelist.length - i;
 					}
@@ -936,17 +964,14 @@ function update_code()
 	}
 
 	console.log(simple);
-	var data = compress(simple);
-	console.log(data);
-	var b64 = $.base64.encode(data);
+	var b64 = compress(simple);
 	console.log(b64);
 	var newloc = jQuery.param.fragment(window.location.href, {l:level.name, m:b64}, 2);
 	history.replaceState({level:level.name, moves:b64}, level.name, newloc);
 }
 
 function load_moves(m) {
-	var compressed = $.base64.decode(m);
-	var data = uncompress(compressed);
+	var data = uncompress(m);
 	console.log("uncompressed data: "+data);
 
 	var level = worlds[current_world].levels[current_level];
