@@ -1,7 +1,5 @@
 TODO:
 - test move loading/compression
-- Rename and rearrange files.
-	- change name to include "2".
 
 - history traversal back to where "level" is not set should clear the level.
 - Fix background colors.
@@ -10,7 +8,8 @@ TODO:
 - Footer?
 - button to add rounds (endless/challenges/etc)
 - maybe use translation for animation instead of fade
-- changing towers, and then clicking on an existing tower of a different type upgrades the old tower type instead of replacing.
+- Clicking on a level should reset the slider.
+  - and reset current_tower
 
 Advanced:
 - differentiate trenches/background
@@ -19,6 +18,7 @@ Advanced:
 - show runner path
 - handle levels that already have towers
 - undo
+- keep track of cash spent, and maximum available cash per level
 
 Missing towers:
 - machine gun

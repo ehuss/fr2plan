@@ -766,6 +766,7 @@ function level_select(level)
 	load_template("#mapTmpl", level, "#map");
 	init_tower_build();
 	init_slider(level.rounds);
+	document.title = level.name;
 }
 
 function tower_select(tower_num)
