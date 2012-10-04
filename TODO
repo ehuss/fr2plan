@@ -8,8 +8,6 @@ TODO:
 - Footer?
 - button to add rounds (endless/challenges/etc)
 - maybe use translation for animation instead of fade
-- Clicking on a level should reset the slider.
-  - and reset current_tower
 
 Advanced:
 - differentiate trenches/background
@@ -19,6 +17,8 @@ Advanced:
 - handle levels that already have towers
 - undo
 - keep track of cash spent, and maximum available cash per level
+- Add a number to the tower images indicating the level.
+- Show numbers on towers indicating sequence numbers?
 
 Missing towers:
 - machine gun
@@ -30,6 +30,4 @@ Missing towers:
 - plague
 - zap
 - power
-- radiation
-- mine
 - nuke

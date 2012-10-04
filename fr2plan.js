@@ -747,7 +747,7 @@ function change_round(rnum)
 
 function init_slider(rounds)
 {
-	$("#round-slider").slider({min:1, max:rounds,
+	$("#round-slider").slider({min:1, max:rounds, value:1,
 		slide: function(event, ui) {
 			change_round(parseInt(ui.value));
 		}
@@ -788,6 +788,7 @@ function level_select(level)
 {
 	current_level = level.level_num;
 	current_world = level.world.world_num;
+	current_tower = 0;
 	load_template("#mapTmpl", level, "#map");
 	init_tower_build();
 	init_slider(level.rounds);
