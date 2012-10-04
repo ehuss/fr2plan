@@ -679,6 +679,7 @@ var tower_build = null;
 // tower_level = 4 means to clear the square.
 var moves = null;
 var current_round = 1;
+var max_rounds = null;
 
 function endsWith(str, suffix) {
     return str.indexOf(suffix, str.length - suffix.length) !== -1;
@@ -723,10 +724,15 @@ function set_tile_tower(row, col, tower_num, tower_level, fade)
 	set_map_img(row, col, imgname, ffunc);
 }
 
+function set_round_number_display(rnum)
+{
+	$("#round-number")[0].innerHTML="Round "+rnum+"/"+max_rounds;
+}
+
 function change_round(rnum)
 {
 	var level = worlds[current_world].levels[current_level];
-	$("#round-number")[0].innerHTML="Round "+rnum+"/"+level.rounds;
+	set_round_number_display(rnum);
 	current_round = rnum;
 	var tbround = tower_build[rnum-1];
 	for (var row_i=0; row_i<tbround.length; row_i++) {
@@ -745,33 +751,78 @@ function change_round(rnum)
 
 }
 
-function init_slider(rounds)
+function add_max_rounds(num)
 {
-	$("#round-slider").slider({min:1, max:rounds, value:1,
+	var level = worlds[current_world].levels[current_level];
+	max_rounds += num;
+	for (var i=max_rounds-num; i<max_rounds; i++) {
+		init_round_data(level, i);
+	}
+	// Propagate towers into the new rounds.
+	var last_tb = tower_build[max_rounds-num-1];
+	for (var i=max_rounds-num; i<max_rounds; i++) {
+		var tb = tower_build[i];
+		for (var row_num=0; row_num<tb.length; row_num++) {
+			var row = tb[row_num];
+			for (var col_num=0; col_num<row.length; col_num++) {
+				if (last_tb[row_num][col_num].tower_num != 'undefined') {
+					var last_tower = last_tb[row_num][col_num];
+					row[col_num] = {
+						tower_num: last_tower.tower_num,
+						tower_level: last_tower.tower_level
+					};
+				}
+			}
+		}
+	}
+	// Have to include "value" to force jquery to refresh the slider.
+	$("#round-slider").slider({max:max_rounds, value:current_round});
+	set_round_number_display(current_round);
+}
+
+function init_slider()
+{
+	$("#round-slider").slider({min:1, max:max_rounds, value:1,
 		slide: function(event, ui) {
 			change_round(parseInt(ui.value));
 		}
 	});
 	change_round(1);
+	// Add a button if it's not already there.
+	if (!$("#round-add-button").length) {
+		$("#round-adder").append("<button id=\"round-add-button\">Add 10 Rounds</button>");
+		$("#round-add-button").button()
+		    .click(function() {
+				if (max_rounds < 250) {
+					add_max_rounds(10);
+				}
+			});
+	}
+
+}
+
+function init_round_data(level, round_num)
+{
+	var round = new Array(level.layout.length);
+	for (var row_i=0; row_i<level.layout.length; row_i++) {
+		var row = level.layout[row_i];
+		var round_row = new Array(row.length);
+		for (var col_i=0; col_i<row.length; col_i++) {
+			round_row[col_i] = {};
+		}
+		round[row_i] = round_row;
+	}
+	tower_build[round_num] = round;
+	moves[round_num] = new Array();
 }
 
 function init_tower_build()
 {
 	var level = worlds[current_world].levels[current_level];
-	moves = new Array(level.rounds);
-	tower_build = new Array(level.rounds);
-	for(i=0; i<level.rounds; i++) {
-		var round = new Array(level.layout.length);
-		for (var row_i=0; row_i<level.layout.length; row_i++) {
-			var row = level.layout[row_i];
-			var round_row = new Array(row.length);
-			for (var col_i=0; col_i<row.length; col_i++) {
-				round_row[col_i] = {};
-			}
-			round[row_i] = round_row;
-		}
-		tower_build[i] = round;
-		moves[i] = new Array();
+	moves = new Array(max_rounds);
+	tower_build = new Array(max_rounds);
+	for(i=0; i<max_rounds; i++) {
+		init_round_data(level, i);
 	}
 }
 
@@ -786,12 +837,13 @@ function load_template(tmpl, context, dest)
 
 function level_select(level)
 {
+	max_rounds = level.rounds;
 	current_level = level.level_num;
 	current_world = level.world.world_num;
 	current_tower = 0;
 	load_template("#mapTmpl", level, "#map");
 	init_tower_build();
-	init_slider(level.rounds);
+	init_slider();
 	document.title = level.name;
 }
 
@@ -829,11 +881,11 @@ function tile_click(row_num, col_num)
 			}
 		}
 		// Propagate this change to future levels.
-		for (var i=current_round; i<level.rounds; i++) {
+		for (var i=current_round; i<max_rounds; i++) {
 			tower_build[i][row_num][col_num] = {
 				tower_num: b.tower_num,
 				tower_level: b.tower_level
-			}
+			};
 			remove_move(i+1, row_num, col_num);
 		}
 		// Update the image.
@@ -934,7 +986,7 @@ function update_code()
 	}
 
 
-	for (var round_num=0; round_num<level.rounds; round_num++) {
+	for (var round_num=0; round_num<max_rounds; round_num++) {
 		var round_moves = moves[round_num];
 		if (round_moves.length == 0) {
 			round_diff += 1;
@@ -978,12 +1030,20 @@ function load_moves(m) {
 	var level = worlds[current_world].levels[current_level];
 
 	// round diffs are zero based.
+	// round_number is 0 based.
 	var round_number = -1;
 	var tower_num, tower_level, row_num, col_num;
 	var movelist = new Array();
 
 	for (var i=0; i<data.length;) {
 		round_number += data[i]+1;
+		if (round_number >= max_rounds) {
+			if (round_number > 250) {
+				alert("Too many rounds.");
+				return;
+			}
+			add_max_rounds(round_number-max_rounds+1);
+		}
 		i += 1;
 		while (i<data.length) {
 			var tower_num = data[i];
@@ -1015,7 +1075,7 @@ function load_moves(m) {
 				b.tower_level = tower_level;
 			}
 			// Propagate this change to future levels.
-			for (var r=round_number+1; r<level.rounds; r++) {
+			for (var r=round_number+1; r<max_rounds; r++) {
 				tower_build[r][row_num][col_num] = {
 					tower_num: b.tower_num,
 					tower_level: b.tower_level
@@ -1074,7 +1134,7 @@ function initialize()
 	$(document).bind('keydown', 'right', function() {
 		if (tower_build != null) {
 			var level = worlds[current_world].levels[current_level];
-			if (current_round < level.rounds) {
+			if (current_round < max_rounds) {
 				$("#round-slider").slider("value", current_round+1);
 				change_round(current_round+1);
 			}

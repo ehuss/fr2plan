@@ -65,6 +65,11 @@
 		margin-left: 20px;
 		margin-right: 20px;
 	}
+
+	#round-adder {
+		float: right;
+		margin-right: 20px;
+	}
 </style>
 </head>
 <body>
@@ -89,8 +94,7 @@
 
 <div id="round-slider"></div>
 <div id="round-number"></div>
-
-<div id="test-comp"></div>
+<div id="round-adder"></div>
 </div>
 
 <!--<div id="footer">Footer</div>-->
@@ -126,7 +130,7 @@
 		{{#myeach towers}}
 		<tr>
 			{{#myeach tower_row}}
-			<td><img alt="{{imgname}}" title="{{imgname}}" src="images/tower-select/{{imgname}}.png" onclick="javascript:tower_select({{number}});"></td>
+			<td><img id="tower-select-{{number}}" alt="{{imgname}}" title="{{imgname}}" src="images/tower-select/{{imgname}}.png" onclick="javascript:tower_select({{number}});"></td>
 			{{/myeach}}
 		</tr>
 		{{/myeach}}
