@@ -1166,32 +1166,28 @@ function initialize()
 	}
 
 	// History traversal.
-	window.addEventListener('popstate', function(e) {
-		console.log("popstate");
-		console.log(e.state);
+	$(window).bind('popstate', function(e) {
+		console.log("popstate "+e.state);
 		if (e.state && e.state.level) {
 			// History navigation.
 			var level = levels[e.state.level];
 			change_level(level);
 		} else {
 			// Initial visit.
-			var l = jQuery.deparam.fragment().l;
-			if (l) {
-				var level = levels[l];
+			var frag = jQuery.deparam.fragment();
+			if (frag && frag.l) {
+				var level = levels[frag.l];
 				change_level(level);
+				if (frag.m) {
+					load_moves(frag.m);
+				}
 			}
 		}
 	});
 
+	console.log("Initializing.");
 	// Handle initial loading with a fragment.
-	var frag = jQuery.deparam.fragment();
-	if (frag && frag.l) {
-		var level = levels[frag.l];
-		change_level(level);
-		if (frag.m) {
-			load_moves(frag.m);
-		}
-	}
+	$(window).trigger('popstate');
 }
 
 Handlebars.registerHelper('myeach', function(array, options) {
