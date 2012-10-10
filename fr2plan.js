@@ -123,10 +123,8 @@ function compress_rice(data, k) {
 	return bs.result.join("");
 }
 
-function uncompress(k, data) {
-	var cdata = data.slice(1);
-	var compressed = $.base64.decode(cdata);
-	return uncompress_rice(compressed, k);
+function uncompress(cdata, k) {
+	return uncompress_rice(cdata, k);
 }
 
 function uncompress_rice(data, k) {
@@ -1065,7 +1063,7 @@ function update_code()
 				var move = round_moves[move_num];
 				// See if this is an upgrade of a previous tower.
 				var n = check_upgrade(move);
-				if (n == -1) {
+				if (n == -1 || n > 25) {
 					// Not an upgrade.
 					simple.push(move[0]+2);
 					simple.push(move[1]);
@@ -1101,7 +1099,13 @@ function load_moves(m) {
 		// Second version, removed outer rows/colums, so need to adjust.
 		k = version_code-1;
 	}
-	var data = uncompress(k, m);
+	var cdata;
+	if (fix_old_rows) {
+		cdata = $.base64old.decode(m.slice(1));
+	} else {
+		cdata = $.base64.decode(m.slice(1));
+	}
+	var data = uncompress(cdata, k);
 	console.log("uncompressed data: "+data);
 
 	// round diffs are zero based.
