@@ -1,4 +1,5 @@
 TODO:
+- Add width/height to img's.
 - test move loading/compression
 
 - history traversal back to where "level" is not set should clear the level.
@@ -8,6 +9,8 @@ TODO:
 - Footer?
 - maybe use translation for animation instead of fade
 - use css image sprites
+- Make level links real links instead of onclicks?
+- "undoing" a move seems to polute the move data (makes the move URL longer).
 
 Advanced:
 - differentiate trenches/background
@@ -19,6 +22,7 @@ Advanced:
 - keep track of cash spent, and maximum available cash per level
 - Add a number to the tower images indicating the level.
 - Show numbers on towers indicating sequence numbers?
+- Show bridges/restricted running directions/etc.
 
 Missing towers:
 - machine gun

@@ -34,8 +34,6 @@
 		background: #cc9;
 	}
 
-	#map-table {
-	}
 	table {
 		border-collapse: collapse;
 		border-spacing: 0px;
@@ -70,6 +68,11 @@
 		float: right;
 		margin-right: 20px;
 	}
+
+	#map {
+		/* Make it easier to position the towers relative to the image. */
+		position: relative;
+	}
 </style>
 </head>
 <body>
@@ -80,7 +83,7 @@
 
 </div>
 <div id="main">
-<div id="map">
+<div id="body">
 	<h2>Instructions</h2>
 	<ol>
 		<li>Select a level on the left.
@@ -114,15 +117,9 @@
 <script id="mapTmpl" type="text/x-handlebars-template">
 	<h2>{{name}}</h2>
 
-	<table id="map-table">
-	  {{#myeach layout}}
-		<tr>
-			{{#myeach this}}
-			<td><img alt="map tile" src="{{maptile value}}" onclick="javascript:tile_click({{../index}}, {{index}});"></td>
-			{{/myeach}}
-		</tr>
-		{{/myeach}}
-	</table>
+	<div id="map">
+		<img id="map-img" src="images/maps/{{img}}">
+	</div>
 </script>
 
 <script id="towersTmpl" type="text/x-handlebars-template">
