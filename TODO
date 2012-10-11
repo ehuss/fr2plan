@@ -5,7 +5,6 @@ TODO:
 - add version numbers to the JS to deal with caching.
 - history traversal back to where "level" is not set should clear the level.
 - Fix background colors.
-- Some way to indicate which tower is currently selected?
 - Prettify.
 - Footer?
 - maybe use translation for animation instead of fade

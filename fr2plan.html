@@ -73,6 +73,13 @@
 		/* Make it easier to position the towers relative to the image. */
 		position: relative;
 	}
+	#towers {
+		position: relative;
+		/* Not entirely sure why the height is necessary here, but not with #map.
+		   Otherwise, the slider was positioning on top of it.
+		*/
+		height: 140px;
+	}
 </style>
 </head>
 <body>
@@ -120,18 +127,6 @@
 	<div id="map">
 		<img id="map-img" src="images/maps/{{img}}">
 	</div>
-</script>
-
-<script id="towersTmpl" type="text/x-handlebars-template">
-	<table>
-		{{#myeach towers}}
-		<tr>
-			{{#myeach tower_row}}
-			<td><img id="tower-select-{{number}}" alt="{{imgname}}" title="{{imgname}}" src="images/tower-select/{{imgname}}.png" onclick="javascript:tower_select({{number}});"></td>
-			{{/myeach}}
-		</tr>
-		{{/myeach}}
-	</table>
 </script>
 
 <script src="js/jquery-1.8.0.min.js"></script>

@@ -635,80 +635,105 @@ $.each(worlds, function(windex, world) {
 
 
 var towers = [
-		{imgname: "gatling",
-		 position_y: 165
+		{name: "Gatling",
+		 position_y: 165,
+		 select_y: 225
 		},
-		{imgname: "machine-gun",
-		 position_y: 2475
+		{name: "Machine Gun",
+		 position_y: 2475,
+		 select_y: 675
 		},
-		{imgname: "glue",
-		 position_y: 330
+		{name: "Glue",
+		 position_y: 330,
+		 select_y: 300
 		},
-		{imgname: "ice",
-		 position_y: 660
+		{name: "Ice",
+		 position_y: 660,
+		 select_y: 450
 		},
-		{imgname: "missile",
-		 position_y: 1155
+		{name: "Missile",
+		 position_y: 1155,
+		 select_y: 825
 		},
-		{imgname: "oil",
-		 position_y: 1320
+		{name: "Oil",
+		 position_y: 1320,
+		 select_y: 975
 		},
-		{imgname: "sonic-blast",
-		 position_y: 2475
+		{name: "Sonic Blast",
+		 position_y: 2475,
+		 select_y: 1575
 		},
-		{imgname: "spark",
-		 position_y: 2145
+		{name: "Spark",
+		 position_y: 2145,
+		 select_y: 1650
 		},
-		{imgname: "slow-link",
-		 position_y: 2475
+		{name: "Slow Link",
+		 position_y: 2475,
+		 select_y: 1500
 		},
-		{imgname: "cannon",
-		 position_y: 2475
+		{name: "Cannon",
+		 position_y: 2475,
+		 select_y: 0
 		},
-		{imgname: "hive",
-		 position_y: 495
+		{name: "Hive",
+		 position_y: 495,
+		 select_y: 375
 		},
-		{imgname: "laser",
-		 position_y: 825
+		{name: "Laser",
+		 position_y: 825,
+		 select_y: 525
 		},
-		{imgname: "gas",
-		 position_y: 2475
+		{name: "Gas",
+		 position_y: 2475,
+		 select_y: 150
 		},
-		{imgname: "link",
-		 position_y: 2475
+		{name: "Link",
+		 position_y: 2475,
+		 select_y: 600
 		},
-		{imgname: "flamethrower",
-		 position_y: 0
+		{name: "Flamethrower",
+		 position_y: 0,
+		 select_y: 75
 		},
-		{imgname: "plague",
-		 position_y: 2475
+		{name: "Plague",
+		 position_y: 2475,
+		 select_y: 1050
 		},
-		{imgname: "zap",
-		 position_y: 2475
+		{name: "Zap",
+		 position_y: 2475,
+		 select_y: 1800
 		},
-		{imgname: "plasma",
-		 position_y: 1485
+		{name: "Plasma",
+		 position_y: 1485,
+		 select_y: 1125
 		},
-		{imgname: "power",
-		 position_y: 2475
+		{name: "Power",
+		 position_y: 2475,
+		 select_y: 1200
 		},
-		{imgname: "radiation",
-		 position_y: 1815
+		{name: "Radiation",
+		 position_y: 1815,
+		 select_y: 1350
 		},
-		{imgname: "tesla",
-		 position_y: 2310
+		{name: "Tesla",
+		 position_y: 2310,
+		 select_y: 1725
 		},
-		{imgname: "pyro",
-		 position_y: 1650
+		{name: "Pyro",
+		 position_y: 1650,
+		 select_y: 1275
 		},
-		{imgname: "mine",
-		 position_y: 990
+		{name: "Mine",
+		 position_y: 990,
+		 select_y: 750
 		},
-		{imgname: "nuke",
-		 position_y: 2475
+		{name: "Nuke",
+		 position_y: 2475,
+		 select_y: 900
 		},
-		{imgname: "railgun",
-		 position_y: 1980
+		{name: "Railgun",
+		 position_y: 1980,
+		 select_y: 1425
 		}
 ]
 
@@ -735,6 +760,8 @@ var max_rounds = null;
 // }
 // Undefined if no image.
 var tower_images = null;
+// Array of "div" objects matching the order in "towers".
+var tower_selectors = null;
 
 function endsWith(str, suffix) {
     return str.indexOf(suffix, str.length - suffix.length) !== -1;
@@ -749,7 +776,7 @@ function set_tile_tower(row, col, tower_num, tower_level, fade)
 		var map_img_pos = $("#map-img").position();
 		var img = $("<div/>").appendTo("#map").
 		css({
-			"background": "url('images/towers/towers-0.1.png') 0px -"+img_pos+"px",
+			background: "url('images/towers/towers-0.1.png') 0px -"+img_pos+"px",
 			width: 50,
 			height: 50,
 			position: "absolute",
@@ -898,7 +925,7 @@ function init_tower_images()
 	if (tower_images != null) {
 		$.each(tower_images, function(row_i, row) {
 			$.each(row, function(col_i, ti) {
-				if (typeof ti.img != "undefined") {
+				if (typeof ti != "undefined") {
 					ti.img.detach();
 				}
 			})
@@ -924,7 +951,7 @@ function level_select(level)
 {
 	max_rounds = level.rounds;
 	current_level = level;
-	current_tower = 0;
+	select_tower(0);
 	load_template("#mapTmpl", level, "#body");
 	$("#map-img").on("click", function(e) {
 		var offset = $(this).offset();
@@ -951,11 +978,6 @@ function test_layout()
 			}
 		});
 	});
-}
-
-function tower_select(tower_num)
-{
-	current_tower = tower_num;
 }
 
 function tile_click(row_num, col_num)
@@ -1216,18 +1238,47 @@ function load_moves(m) {
 	}
 }
 
+function select_tower(tower_num)
+{
+	var old_tower = towers[current_tower];
+	tower_selectors[current_tower].css("background-position", "0px -"+old_tower.select_y+"px");
+	var new_tower = towers[tower_num];
+	current_tower = tower_num;
+	tower_selectors[tower_num].css("background-position", "75px -"+new_tower.select_y+"px");
+}
+
+function load_tower_select()
+{
+	tower_selectors = new Array(towers.length);
+
+	$.each(towers, function(i, tower) {
+		var x_pos, y_pos;
+		if (i < Math.floor(towers.length/2)) {
+			x_pos = i*75;
+			y_pos = 0;
+		} else {
+			x_pos = (i - Math.floor(towers.length/2)) * 75;
+			y_pos = 70;
+		}
+		var img = $("<div/>", {title: tower.name}).appendTo("#towers").
+		css({
+			background: "url('images/tower-select/tower-select.png') 0px -"+tower.select_y+"px",
+			width: 75,
+			height: 70,
+			position: "absolute",
+			left: x_pos,
+			top: y_pos
+		}).click(function() {
+			select_tower(i);
+		});
+		tower_selectors[i] = img;
+	});
+}
+
 function initialize()
 {
 	load_template("#worldsTmpl", {worlds: worlds}, "#worlds");
-	var tower_rows = {towers:[
-			{tower_row: towers.slice(0,towers.length/2)},
-			{tower_row: towers.slice(towers.length/2)}
-		]}
-	// Needed since towers are in two rows, can't use index from myeach.
-	for (var i=0; i<towers.length; i++) {
-		towers[i].number = i;
-	}
-	load_template("#towersTmpl", tower_rows, "#towers");
+	load_tower_select();
 
 	$(".level").mouseover(function() {
 		var t = $(this);
