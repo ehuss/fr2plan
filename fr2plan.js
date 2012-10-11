@@ -635,55 +635,80 @@ $.each(worlds, function(windex, world) {
 
 
 var towers = [
-		{imgname: "gatling"
+		{imgname: "gatling",
+		 position_y: 165
 		},
-		{imgname: "machine-gun"
+		{imgname: "machine-gun",
+		 position_y: 2475
 		},
-		{imgname: "glue"
+		{imgname: "glue",
+		 position_y: 330
 		},
-		{imgname: "ice"
+		{imgname: "ice",
+		 position_y: 660
 		},
-		{imgname: "missile"
+		{imgname: "missile",
+		 position_y: 1155
 		},
-		{imgname: "oil"
+		{imgname: "oil",
+		 position_y: 1320
 		},
-		{imgname: "sonic-blast"
+		{imgname: "sonic-blast",
+		 position_y: 2475
 		},
-		{imgname: "spark"
+		{imgname: "spark",
+		 position_y: 2145
 		},
-		{imgname: "slow-link"
+		{imgname: "slow-link",
+		 position_y: 2475
 		},
-		{imgname: "cannon"
+		{imgname: "cannon",
+		 position_y: 2475
 		},
-		{imgname: "hive"
+		{imgname: "hive",
+		 position_y: 495
 		},
-		{imgname: "laser"
+		{imgname: "laser",
+		 position_y: 825
 		},
-		{imgname: "gas"
+		{imgname: "gas",
+		 position_y: 2475
 		},
-		{imgname: "link"
+		{imgname: "link",
+		 position_y: 2475
 		},
-		{imgname: "flamethrower"
+		{imgname: "flamethrower",
+		 position_y: 0
 		},
-		{imgname: "plague"
+		{imgname: "plague",
+		 position_y: 2475
 		},
-		{imgname: "zap"
+		{imgname: "zap",
+		 position_y: 2475
 		},
-		{imgname: "plasma"
+		{imgname: "plasma",
+		 position_y: 1485
 		},
-		{imgname: "power"
+		{imgname: "power",
+		 position_y: 2475
 		},
-		{imgname: "radiation"
+		{imgname: "radiation",
+		 position_y: 1815
 		},
-		{imgname: "tesla"
+		{imgname: "tesla",
+		 position_y: 2310
 		},
-		{imgname: "pyro"
+		{imgname: "pyro",
+		 position_y: 1650
 		},
-		{imgname: "mine"
+		{imgname: "mine",
+		 position_y: 990
 		},
-		{imgname: "nuke"
+		{imgname: "nuke",
+		 position_y: 2475
 		},
-		{imgname: "railgun"
+		{imgname: "railgun",
+		 position_y: 1980
 		}
 ]
 
@@ -703,7 +728,12 @@ var tower_build = null;
 var moves = null;
 var current_round = 1;
 var max_rounds = null;
-// 2D array of img elements.  Undefined if no image.
+// 2D array of objects:
+// {img: The "div" object.
+//  tower: The tower object.
+//  tower_level: The level number.
+// }
+// Undefined if no image.
 var tower_images = null;
 
 function endsWith(str, suffix) {
@@ -713,47 +743,53 @@ function endsWith(str, suffix) {
 function set_tile_tower(row, col, tower_num, tower_level, fade)
 {
 	var tower = towers[tower_num];
-	var imgname = "images/towers/"+tower.imgname+tower_level+".png";
-	var img;
+	var img_pos = tower.position_y+((tower_level-1)*55);
 
 	if (typeof tower_images[row][col] == "undefined") {
 		var map_img_pos = $("#map-img").position();
-		//console.log("map_img_pos="+map_img_pos.left+","+map_img_pos.top);
-		var img = $("<img/>", {"src": imgname}).appendTo("#map").
+		var img = $("<div/>").appendTo("#map").
 		css({
+			"background": "url('images/towers/towers-0.1.png') 0px -"+img_pos+"px",
+			width: 50,
+			height: 50,
 			position: "absolute",
 			left: current_level.tile_x+col*current_level.spacing,
 			top: current_level.tile_y+row*current_level.spacing
 		}).click(function() {
 			tile_click(row, col);
 		});
-		tower_images[row][col] = img;
+		tower_images[row][col] = {
+			img: img,
+			tower: tower,
+			tower_level: tower_level
+		};
 	} else {
-		img = tower_images[row][col];
-		if (endsWith(img.attr("src"), imgname)) {
+		var ti = tower_images[row][col];
+		if (ti.tower == tower && ti.tower_level == tower_level) {
+			// Already showing the correct tower.
 			fade = false;
 		} else {
-			img.attr("src", imgname);
+			ti.tower = tower;
+			ti.tower_level = tower_level;
+			ti.img.css("background-position", "0px -"+img_pos+"px");
 		}
 	}
-
 	if (fade) {
-		img.hide();
-		img.fadeIn(400);
+		tower_images[row][col].img.hide().fadeIn(400);
 	}
 }
 
 function clear_tile_tower(row, col, dofade)
 {
-	var img = tower_images[row][col];
-	if (typeof img != "undefined") {
+	var ti = tower_images[row][col];
+	if (typeof ti != "undefined") {
 		delete tower_images[row][col];
 		if (dofade) {
-			img.fadeOut(400, function() {
-				img.detach();
+			ti.img.fadeOut(400, function() {
+				ti.img.detach();
 			});
 		} else {
-			img.detach();
+			ti.img.detach();
 		}
 	}
 }
@@ -861,9 +897,9 @@ function init_tower_images()
 {
 	if (tower_images != null) {
 		$.each(tower_images, function(row_i, row) {
-			$.each(row, function(col_i, img) {
-				if (typeof img != "undefined") {
-					img.detach();
+			$.each(row, function(col_i, ti) {
+				if (typeof ti.img != "undefined") {
+					ti.img.detach();
 				}
 			})
 		})
