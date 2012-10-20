@@ -10,6 +10,9 @@ TODO:
 - maybe use translation for animation instead of fade
 - Make level links real links instead of onclicks?
 - "undoing" a move seems to polute the move data (makes the move URL longer).
+- show area of effect for towers.
+	- Click and hold on the tower select button, or,
+	- Click and drag from tower select bar
 
 Advanced:
 - differentiate trenches/background
@@ -24,13 +27,7 @@ Advanced:
 - Show bridges/restricted running directions/etc.
 
 Missing towers:
-- machine gun
-- sonic blast
-- slow link
-- cannon
 - gas
-- link
 - plague
 - zap
 - power
-- nuke

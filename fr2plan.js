@@ -636,103 +636,103 @@ $.each(worlds, function(windex, world) {
 
 var towers = [
 		{name: "Gatling",
-		 position_y: 165,
+		 position_y: 330,
 		 select_y: 225
 		},
 		{name: "Machine Gun",
-		 position_y: 2475,
+		 position_y: 1320,
 		 select_y: 675
 		},
 		{name: "Glue",
-		 position_y: 330,
+		 position_y: 495,
 		 select_y: 300
 		},
 		{name: "Ice",
-		 position_y: 660,
+		 position_y: 825,
 		 select_y: 450
 		},
 		{name: "Missile",
-		 position_y: 1155,
+		 position_y: 1650,
 		 select_y: 825
 		},
 		{name: "Oil",
-		 position_y: 1320,
+		 position_y: 1980,
 		 select_y: 975
 		},
 		{name: "Sonic Blast",
-		 position_y: 2475,
+		 position_y: 2970,
 		 select_y: 1575
 		},
 		{name: "Spark",
-		 position_y: 2145,
+		 position_y: 3135,
 		 select_y: 1650
 		},
 		{name: "Slow Link",
-		 position_y: 2475,
+		 position_y: 2805,
 		 select_y: 1500
 		},
 		{name: "Cannon",
-		 position_y: 2475,
+		 position_y: 0,
 		 select_y: 0
 		},
 		{name: "Hive",
-		 position_y: 495,
+		 position_y: 660,
 		 select_y: 375
 		},
 		{name: "Laser",
-		 position_y: 825,
+		 position_y: 990,
 		 select_y: 525
 		},
 		{name: "Gas",
-		 position_y: 2475,
+		 position_y: 330,
 		 select_y: 150
 		},
 		{name: "Link",
-		 position_y: 2475,
+		 position_y: 1155,
 		 select_y: 600
 		},
 		{name: "Flamethrower",
-		 position_y: 0,
+		 position_y: 165,
 		 select_y: 75
 		},
 		{name: "Plague",
-		 position_y: 2475,
+		 position_y: 330,
 		 select_y: 1050
 		},
 		{name: "Zap",
-		 position_y: 2475,
+		 position_y: 330,
 		 select_y: 1800
 		},
 		{name: "Plasma",
-		 position_y: 1485,
+		 position_y: 2145,
 		 select_y: 1125
 		},
 		{name: "Power",
-		 position_y: 2475,
+		 position_y: 330,
 		 select_y: 1200
 		},
 		{name: "Radiation",
-		 position_y: 1815,
+		 position_y: 2475,
 		 select_y: 1350
 		},
 		{name: "Tesla",
-		 position_y: 2310,
+		 position_y: 3300,
 		 select_y: 1725
 		},
 		{name: "Pyro",
-		 position_y: 1650,
+		 position_y: 2310,
 		 select_y: 1275
 		},
 		{name: "Mine",
-		 position_y: 990,
+		 position_y: 1485,
 		 select_y: 750
 		},
 		{name: "Nuke",
-		 position_y: 2475,
+		 position_y: 1815,
 		 select_y: 900
 		},
 		{name: "Railgun",
-		 position_y: 1980,
+		 position_y: 2640,
 		 select_y: 1425
 		}
 ]
@@ -776,7 +776,7 @@ function set_tile_tower(row, col, tower_num, tower_level, fade)
 		var map_img_pos = $("#map-img").position();
 		var img = $("<div/>").appendTo("#map").
 		css({
-			background: "url('images/towers/towers-0.1.png') 0px -"+img_pos+"px",
+			background: "url('images/towers/towers-0.2.png') 0px -"+img_pos+"px",
 			width: 50,
 			height: 50,
 			position: "absolute",
