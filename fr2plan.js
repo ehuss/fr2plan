@@ -782,6 +782,9 @@ function set_tile_tower(row, col, tower_num, tower_level, fade)
 			position: "absolute",
 			left: current_level.tile_x+col*current_level.spacing,
 			top: current_level.tile_y+row*current_level.spacing
+		}).bind("contextmenu", function() {
+			remove_tower(row, col);
+			return false;	// Prevent context menu from showing.
 		}).click(function() {
 			tile_click(row, col);
 		});
@@ -953,7 +956,7 @@ function level_select(level)
 	current_level = level;
 	select_tower(0);
 	load_template("#mapTmpl", level, "#body");
-	$("#map-img").on("click", function(e) {
+	$("#map-img").click(function(e) {
 		var offset = $(this).offset();
 		var x_offset = (e.pageX-offset.left)-level.tile_x;
 		var y_offset = (e.pageY-offset.top)-level.tile_y;
@@ -985,7 +988,7 @@ function tile_click(row_num, col_num)
 	var cell = current_level.layout[row_num][col_num];
 	if (cell == 0) {
 		// -1 because round is 1-based.
-		var b = tower_build[current_round-1][row_num][col_num]
+		var b = tower_build[current_round-1][row_num][col_num];
 		if (typeof b.tower_num == "undefined") {
 			// Empty square, add lvl 1 tower.
 			b.tower_num = current_tower;
@@ -1003,22 +1006,43 @@ function tile_click(row_num, col_num)
 				delete b.tower_num;
 			}
 		}
-		// Propagate this change to future levels.
-		for (var i=current_round; i<max_rounds; i++) {
-			tower_build[i][row_num][col_num] = {
-				tower_num: b.tower_num,
-				tower_level: b.tower_level
-			};
-			remove_move(i+1, row_num, col_num);
-		}
-		// Update the image.
-		if (typeof b.tower_num == "undefined") {
-			clear_tile_tower(row_num, col_num, false);
-		} else {
-			set_tile_tower(row_num, col_num, b.tower_num, b.tower_level, false);
-		}
+		propagate_change(row_num, col_num, b.tower_num, b.tower_level);
+		update_tower_image(row_num, col_num, b.tower_num, b.tower_level);
 	}
 
+	update_code();
+}
+
+function propagate_change(row_num, col_num, tower_num, tower_level)
+{
+	// Propagate this change to future levels.
+	for (var i=current_round; i<max_rounds; i++) {
+		tower_build[i][row_num][col_num] = {
+			tower_num: tower_num,
+			tower_level: tower_level
+		};
+		remove_move(i+1, row_num, col_num);
+	}
+}
+
+function update_tower_image(row_num, col_num, tower_num, tower_level)
+{
+	if (typeof tower_num == "undefined") {
+		clear_tile_tower(row_num, col_num, false);
+	} else {
+		set_tile_tower(row_num, col_num, tower_num, tower_level, false);
+	}
+}
+
+function remove_tower(row_num, col_num)
+{
+	var b = tower_build[current_round-1][row_num][col_num];
+	if (typeof b.tower_num != "undefined") {
+		clear_move(row_num, col_num);
+		delete b.tower_num;
+	}
+	propagate_change(row_num, col_num, b.tower_num, b.tower_level);
+	update_tower_image(row_num, col_num, b.tower_num, b.tower_level);
 	update_code();
 }
 
