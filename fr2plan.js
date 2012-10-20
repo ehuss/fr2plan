@@ -763,10 +763,6 @@ var tower_images = null;
 // Array of "div" objects matching the order in "towers".
 var tower_selectors = null;
 
-function endsWith(str, suffix) {
-    return str.indexOf(suffix, str.length - suffix.length) !== -1;
-}
-
 function set_tile_tower(row, col, tower_num, tower_level, fade)
 {
 	var tower = towers[tower_num];
@@ -956,14 +952,22 @@ function level_select(level)
 	current_level = level;
 	select_tower(0);
 	load_template("#mapTmpl", level, "#body");
-	$("#map-img").click(function(e) {
-		var offset = $(this).offset();
-		var x_offset = (e.pageX-offset.left)-level.tile_x;
-		var y_offset = (e.pageY-offset.top)-level.tile_y;
+
+	function do_map_tile_click(this_offset, x, y) {
+		var x_offset = (x-this_offset.left)-level.tile_x;
+		var y_offset = (y-this_offset.top) -level.tile_y;
 		var row_num = Math.floor(y_offset / level.spacing);
 		var col_num = Math.floor(x_offset / level.spacing);
 		console.log("x_offset="+x_offset+" y_offset="+y_offset+" row_num="+row_num+" col_num="+col_num);
 		tile_click(row_num, col_num);
+	}
+
+	$("#map-img").click(function(e) {
+		do_map_tile_click($(this).offset(), e.pageX, e.pageY);
+	}).droppable({
+		drop: function(e, ui) {
+			do_map_tile_click($(this).offset(), ui.offset.left+25, ui.offset.top+25);
+		}
 	});
 	init_tower_images();
 	init_tower_build();
@@ -985,6 +989,12 @@ function test_layout()
 
 function tile_click(row_num, col_num)
 {
+	if (row_num < 0 || col_num < 0 ||
+		row_num >= current_level.layout.length ||
+		col_num >= current_level.layout[0].length) {
+		// Click outside of grid.
+		return;
+	}
 	var cell = current_level.layout[row_num][col_num];
 	if (cell == 0) {
 		// -1 because round is 1-based.
@@ -1103,7 +1113,7 @@ function update_code()
 	// Simplify the moves into [(rounddiff, moves)]
 	// moves is list of (tower+2, level, row, col)
 	// tower == 0 is last move of round
-	// tower == 1 means next value indicates how man moves back to upgrade.
+	// tower == 1 means next value indicates how many moves back to upgrade.
 	var simple = new Array();
 	var movelist = new Array();
 	var round_diff = 0;
@@ -1292,8 +1302,23 @@ function load_tower_select()
 			position: "absolute",
 			left: x_pos,
 			top: y_pos
-		}).click(function() {
+		}).mousedown(function() {
 			select_tower(i);
+		}).draggable({
+			containment: "#tower-drag-area",
+			cursorAt: {
+				top: 25,
+				left: 25
+			},
+			helper: function(event) {
+				var tower = towers[i];
+				var img_pos = tower.position_y;
+				return $("<div/>").css({
+					background: "url('images/towers/towers-0.2.png') 0px -"+img_pos+"px",
+					width: 50,
+					height: 50
+				});
+			}
 		});
 		tower_selectors[i] = img;
 	});
