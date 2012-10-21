@@ -828,6 +828,8 @@ var tower_images = null;
 // Array of "div" objects matching the order in "towers".
 var tower_selectors = null;
 
+var tower_image_url = "images/towers/towers-0.2.png";
+
 function set_tile_tower(row, col, tower_num, tower_level, fade)
 {
 	var tower = towers[tower_num];
@@ -837,7 +839,7 @@ function set_tile_tower(row, col, tower_num, tower_level, fade)
 		var map_img_pos = $("#map-img").position();
 		var img = $("<div/>").appendTo("#map").
 		css({
-			background: "url('images/towers/towers-0.2.png') 0px -"+img_pos+"px",
+			background: "url('"+tower_image_url+"') 0px -"+img_pos+"px",
 			width: 50,
 			height: 50,
 			position: "absolute",
@@ -1472,7 +1474,7 @@ function load_tower_select()
 			helper: function(event) {
 				var c = draw_outline(tower, 0.5);
 				c.drawImage({
-					source: "images/towers/towers-0.2.png",
+					source: tower_image_url,
 					x: canvas_dim,
 					y: canvas_dim,
 					sx: 0,
@@ -1568,6 +1570,9 @@ function initialize()
 			}
 		}
 	});
+
+	// Make sure images get preloaded.
+	$("<img/>")[0].src = tower_image_url;
 
 	console.log("Initializing.");
 	// Handle initial loading with a fragment.

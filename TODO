@@ -10,7 +10,6 @@ TODO:
 - maybe use translation for animation instead of fade
 - Make level links real links instead of onclicks?
 - "undoing" a move seems to polute the move data (makes the move URL longer).
-- preload the towers image
 
 Advanced:
 - differentiate trenches/background
