@@ -637,105 +637,170 @@ $.each(worlds, function(windex, world) {
 var towers = [
 		{name: "Gatling",
 		 position_y: 330,
-		 select_y: 225
+		 select_y: 225,
+		 shape: "circle",
+		 outer_radius: 2.5,
+		 inner_radius: 0
 		},
 		{name: "Machine Gun",
 		 position_y: 1320,
-		 select_y: 675
+		 select_y: 675,
+		 shape: "circle",
+		 outer_radius: 2.5,
+		 inner_radius: 0
 		},
 		{name: "Glue",
 		 position_y: 495,
-		 select_y: 300
+		 select_y: 300,
+		 shape: "circle",
+		 outer_radius: 2.5,
+		 inner_radius: 0
 		},
 		{name: "Ice",
 		 position_y: 825,
-		 select_y: 450
+		 select_y: 450,
+		 shape: "circle",
+		 outer_radius: 1.5,
+		 inner_radius: 0
 		},
 		{name: "Missile",
 		 position_y: 1650,
-		 select_y: 825
+		 select_y: 825,
+		 shape: "circle",
+		 outer_radius: 3.5,
+		 inner_radius: 0
 		},
 		{name: "Oil",
 		 position_y: 1980,
-		 select_y: 975
+		 select_y: 975,
+		 shape: "circle",
+		 outer_radius: 2.5,
+		 inner_radius: 0
 		},
 		{name: "Sonic Blast",
 		 position_y: 2970,
-		 select_y: 1575
+		 select_y: 1575,
+		 shape: "circle",
+		 outer_radius: 2.5,
+		 inner_radius: 0
 		},
 		{name: "Spark",
 		 position_y: 3135,
-		 select_y: 1650
+		 select_y: 1650,
+		 shape: "square",
+		 outer_radius: 1.5
 		},
 		{name: "Slow Link",
 		 position_y: 2805,
-		 select_y: 1500
+		 select_y: 1500,
+		 shape: "square",
+		 outer_radius: 1.5
 		},
 		{name: "Cannon",
 		 position_y: 0,
-		 select_y: 0
+		 select_y: 0,
+		 shape: "circle",
+		 outer_radius: 3.5,
+		 inner_radius: 1
 		},
 		{name: "Hive",
 		 position_y: 660,
-		 select_y: 375
+		 select_y: 375,
+		 shape: "circle",
+		 outer_radius: 3.5,
+		 inner_radius: 0
 		},
 		{name: "Laser",
 		 position_y: 990,
-		 select_y: 525
+		 select_y: 525,
+		 shape: "cross",
+		 outer_radius: 2.5
 		},
 		{name: "Gas",
 		 position_y: 330,
-		 select_y: 150
+		 select_y: 150,
+		 shape: "???"
 		},
 		{name: "Link",
 		 position_y: 1155,
-		 select_y: 600
+		 select_y: 600,
+		 shape: "square",
+		 outer_radius: 1.5
 		},
 		{name: "Flamethrower",
 		 position_y: 165,
-		 select_y: 75
+		 select_y: 75,
+		 shape: "circle",
+		 outer_radius: 2.5,
+		 inner_radius: 0
 		},
 		{name: "Plague",
 		 position_y: 330,
-		 select_y: 1050
+		 select_y: 1050,
+		 shape: "???"
 		},
 		{name: "Zap",
 		 position_y: 330,
-		 select_y: 1800
+		 select_y: 1800,
+		 shape: "???"
 		},
 		{name: "Plasma",
 		 position_y: 2145,
-		 select_y: 1125
+		 select_y: 1125,
+		 shape: "cross",
+		 outer_radius: 3.5
 		},
 		{name: "Power",
 		 position_y: 330,
-		 select_y: 1200
+		 select_y: 1200,
+		 shape: "???"
 		},
 		{name: "Radiation",
 		 position_y: 2475,
-		 select_y: 1350
+		 select_y: 1350,
+		 shape: "circle",
+		 outer_radius: 2.5,
+		 inner_radius: 0
 		},
 		{name: "Tesla",
 		 position_y: 3300,
-		 select_y: 1725
+		 select_y: 1725,
+		 shape: "circle",
+		 outer_radius: 2.5,
+		 inner_radius: 0
 		},
 		{name: "Pyro",
 		 position_y: 2310,
-		 select_y: 1275
+		 select_y: 1275,
+		 shape: "circle",
+		 outer_radius: 2.5,
+		 inner_radius: 0
 		},
 		{name: "Mine",
 		 position_y: 1485,
-		 select_y: 750
+		 select_y: 750,
+		 shape: "square",
+		 outer_radius: 1.5
 		},
 		{name: "Nuke",
 		 position_y: 1815,
-		 select_y: 900
+		 select_y: 900,
+		 shape: "circle",
+		 outer_radius: 3.5,
+		 inner_radius: 1.5
 		},
 		{name: "Railgun",
 		 position_y: 2640,
-		 select_y: 1425
+		 select_y: 1425,
+		 shape: "circle",
+		 outer_radius: 5.5,
+		 inner_radius: 1.5
 		}
 ]
+
+$.each(towers, function(tindex, tower) {
+	tower.tower_num = tindex;
+});
 
 var current_tower = 0;
 // level object from worlds object.
@@ -966,7 +1031,8 @@ function level_select(level)
 		do_map_tile_click($(this).offset(), e.pageX, e.pageY);
 	}).droppable({
 		drop: function(e, ui) {
-			do_map_tile_click($(this).offset(), ui.offset.left+25, ui.offset.top+25);
+			do_map_tile_click($(this).offset(), ui.offset.left+ui.helper.width()/2,
+			                                    ui.offset.top+ui.helper.width()/2);
 		}
 	});
 	init_tower_images();
@@ -1281,6 +1347,95 @@ function select_tower(tower_num)
 	tower_selectors[tower_num].css("background-position", "75px -"+new_tower.select_y+"px");
 }
 
+function draw_outline(tower, opacity)
+{
+	var canvas_dim = tower.outer_radius*52.5;
+	var canvas = $("<canvas/>").attr({width:canvas_dim*2+2+"px",height:canvas_dim*2+2+"px"});
+	if (tower.shape == "circle") {
+		canvas.drawArc({
+			fillStyle: "#62b72d",
+			strokeWidth: 2,
+			strokeStyle: "#88e45d",
+			opacity: opacity,
+			x: canvas_dim,
+			y: canvas_dim,
+			radius: canvas_dim
+		});
+	if (tower.inner_radius != 0) {
+		canvas.drawArc({
+			compositing: "destination-out",
+			fillStyle: "#000",
+			opacity: 1.0,
+			x: canvas_dim,
+			y: canvas_dim,
+			radius: tower.inner_radius*52.5
+		}).
+		drawArc({
+			strokeWidth: 2,
+			strokeStyle: "#88e45d",
+			opacity: opacity,
+			x: canvas_dim,
+			y: canvas_dim,
+			radius: tower.inner_radius*52.5
+		})
+	}
+	} else if (tower.shape == "square") {
+		canvas.drawRect({
+			fillStyle: "#62b72d",
+			strokeWidth: 2,
+			strokeStyle: "#88e45d",
+			opacity: opacity,
+			x: canvas_dim,
+			y: canvas_dim,
+			width: tower.outer_radius*52.5*2,
+			height: tower.outer_radius*52.5*2
+		});
+	} else if (tower.shape == "cross") {
+		var orad = tower.outer_radius*52.5;
+		canvas.drawLine({
+			fillStyle: "#62b72d",
+			strokeWidth: 2,
+			strokeStyle: "#88e45d",
+			opacity: opacity,
+			x1:  orad-(52.5/2), y1:  orad-(52.5/2),
+			x2:  orad-(52.5/2), y2:  0,
+			x3:  orad+(52.5/2), y3:  0,
+			x4:  orad+(52.5/2), y4:  orad-(52.5/2),
+			x5:  orad*2,        y5:  orad-(52.5/2),
+			x6:  orad*2,        y6:  orad+(52.5/2),
+			x7:  orad+(52.5/2), y7:  orad+(52.5/2),
+			x8:  orad+(52.5/2), y8:  orad*2,
+			x9:  orad-(52.5/2), y9:  orad*2,
+			x10: orad-(52.5/2), y10: orad+(52.5/2),
+			x11: 0, 			y11: orad+(52.5/2),
+			x12: 0, 			y12: orad-(52.5/2),
+			x13: orad-(52.5/2), y13: orad-(52.5/2)
+		})
+	}
+	return canvas;
+}
+
+function draw_tower_outlines(event, ui)
+{
+	$.each(tower_images, function(rowi, row) {
+		$.each(row, function(coli, ti) {
+			if (typeof ti != "undefined") {
+				if (ti.tower.tower_num == current_tower) {
+					var c = draw_outline(ti.tower, 0.25);
+					c.addClass("tower-outline");
+					c.appendTo(ti.img);
+					c.position({of:ti.img});
+				}
+			}
+		});
+	});
+}
+
+function remove_tower_outlines(event, ui)
+{
+	$(".tower-outline").detach();
+}
+
 function load_tower_select()
 {
 	tower_selectors = new Array(towers.length);
@@ -1294,6 +1449,10 @@ function load_tower_select()
 			x_pos = (i - Math.floor(towers.length/2)) * 75;
 			y_pos = 70;
 		}
+		// The 2.5 spacing here is not always accurate (due to resizing the
+		// maps, the tiles are always about 50 pixels, but the spacing varies
+		// a little).
+		var canvas_dim = tower.outer_radius*52.5;
 		var img = $("<div/>", {title: tower.name}).appendTo("#towers").
 		css({
 			background: "url('images/tower-select/tower-select.png') 0px -"+tower.select_y+"px",
@@ -1305,20 +1464,27 @@ function load_tower_select()
 		}).mousedown(function() {
 			select_tower(i);
 		}).draggable({
-			containment: "#tower-drag-area",
+			//containment: "#tower-drag-area",
 			cursorAt: {
-				top: 25,
-				left: 25
+				top: canvas_dim,
+				left: canvas_dim
 			},
 			helper: function(event) {
-				var tower = towers[i];
-				var img_pos = tower.position_y;
-				return $("<div/>").css({
-					background: "url('images/towers/towers-0.2.png') 0px -"+img_pos+"px",
-					width: 50,
-					height: 50
+				var c = draw_outline(tower, 0.5);
+				c.drawImage({
+					source: "images/towers/towers-0.2.png",
+					x: canvas_dim,
+					y: canvas_dim,
+					sx: 0,
+					sy: tower.position_y,
+					sWidth: 50,
+					sHeight: 50,
+					cropFromCenter: false
 				});
-			}
+				return c;
+			},
+			start: draw_tower_outlines,
+			stop: remove_tower_outlines
 		});
 		tower_selectors[i] = img;
 	});

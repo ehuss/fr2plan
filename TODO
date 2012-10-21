@@ -10,9 +10,6 @@ TODO:
 - maybe use translation for animation instead of fade
 - Make level links real links instead of onclicks?
 - "undoing" a move seems to polute the move data (makes the move URL longer).
-- show area of effect for towers.
-	- Click and hold on the tower select button, or,
-	- Click and drag from tower select bar
 - preload the towers image
 
 Advanced:
