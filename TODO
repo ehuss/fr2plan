@@ -10,9 +10,9 @@ TODO:
 - maybe use translation for animation instead of fade
 - Make level links real links instead of onclicks?
 - "undoing" a move seems to polute the move data (makes the move URL longer).
+- drag and drop on an existing tower should replace, not upgrade
 
 Advanced:
-- differentiate trenches/background
 - select towers first (with animation!)
 - save layout
 - show runner path
