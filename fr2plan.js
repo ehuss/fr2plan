@@ -1027,21 +1027,24 @@ function level_select(level)
 	select_tower(0);
 	load_template("#mapTmpl", level, "#body");
 
-	function do_map_tile_click(this_offset, x, y) {
+	function row_col_from_coord(this_offset, x, y) {
 		var x_offset = (x-this_offset.left)-level.tile_x;
 		var y_offset = (y-this_offset.top) -level.tile_y;
 		var row_num = Math.floor(y_offset / level.spacing);
 		var col_num = Math.floor(x_offset / level.spacing);
 		console.log("x_offset="+x_offset+" y_offset="+y_offset+" row_num="+row_num+" col_num="+col_num);
-		tile_click(row_num, col_num);
+		return {row_num:row_num, col_num:col_num};
 	}
 
 	$("#map-img").click(function(e) {
-		do_map_tile_click($(this).offset(), e.pageX, e.pageY);
+		var pos = row_col_from_coord($(this).offset(), e.pageX, e.pageY);
+		tile_click(pos.row_num, pos.col_num);
 	}).droppable({
 		drop: function(e, ui) {
-			do_map_tile_click($(this).offset(), ui.offset.left+ui.helper.width()/2,
-			                                    ui.offset.top+ui.helper.width()/2);
+			var pos = row_col_from_coord($(this).offset(), ui.offset.left+ui.helper.width()/2,
+			                                               ui.offset.top+ui.helper.width()/2);
+			remove_tower(pos.row_num, pos.col_num);
+			tile_click(pos.row_num, pos.col_num);
 		}
 	});
 	init_tower_images();
